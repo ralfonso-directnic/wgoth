@@ -1,17 +1,15 @@
 package main
 
 import (
-  "html/template"
-  ga "github.com/ralfonso-directnic/wgoth"
-  "os"
-  "github.com/markbates/goth"
-  "net/http"
-  "log"
+	"github.com/markbates/goth"
+	ga "github.com/ralfonso-directnic/wgoth"
+	"html/template"
+	"log"
+	"net/http"
+	"os"
 )
 
-
 var loginTemplate = `<a href="/auth/{{.Provider}}">Sign in</a>`
-
 
 var userTemplate = `
 <p><a href="/logout/{{.Provider}}">logout</a></p>
@@ -26,31 +24,18 @@ var userTemplate = `
 <p>ExpiresAt: {{.ExpiresAt}}</p>
 <p>RefreshToken: {{.RefreshToken}}</p>`
 
+func main() {
 
-func main(){
+	os.Setenv("SESSION_SECRET", "asdfasfasdf")                                                                            //Required
+	ga.Init("google", "127.0.0.1", "8087", "", "", "madeupstringhere.apps.googleusercontent.com", "abc123_google_secret") //after the first 5 required args, the variable args are used
+	ga.AuthListen(loginTemplate, func(user goth.User, res http.ResponseWriter, req *http.Request) {
 
-    os.Setenv("SESSION_SECRET", "asdfasfasdf")//Required
-    os.Setenv("WGOTH_HOST","127.0.0.1")//Required
-    os.Setenv("WGOTH_PORT","8087")//Required
+		log.Printf("%+v", user)
+		t, _ := template.New("").Parse(userTemplate)
+		t.Execute(res, user)
 
-    //each plugin requires its onw pluginname_key,secret etc
-    //DIGITALOCEAN_KEY
-    //OKTA_KEY
+		//write out a result, redirect,save a session,etc
 
+	})
 
-    os.Setenv("GOOGLE_KEY","madeupstringhere.apps.googleusercontent.com")
-    os.Setenv("GOOGLE_SECRET","abc123")
-
-    ga.Init("google","","")
-    ga.AuthListen(loginTemplate,func(user goth.User,res http.ResponseWriter,req *http.Request){
-        
-         log.Printf("%+v",user)
-         t, _ := template.New("").Parse(userTemplate)
-		 t.Execute(res,user)
-		 
-		 //write out a result, redirect,save a session,etc
-        
-    })
-    
-    
 }

@@ -21,12 +21,16 @@ var provider_name string
 var protocol string
 var sslcrt string
 var sslkey string
+var host string
+var port string
 
-func Init(provider_nm string,  sslkey_str string, sslcrt_str string) {
+func Init(provider_nm string, host_str string, port_str string, sslkey_str string, sslcrt_str string, args ...string) {
 
 	provider_name = provider_nm
-	sslkey =  sslkey_str
+	sslkey = sslkey_str
 	sslcrt = sslcrt_str
+	host = host_str
+	port = port_str
 
 	if len(sslkey) > 0 && len(sslcrt) > 0 {
 		protocol = "https"
@@ -34,32 +38,31 @@ func Init(provider_nm string,  sslkey_str string, sslcrt_str string) {
 		protocol = "http"
 	}
 
+	if len(host) == 0 {
+		host, _ := os.Hostname()
 
-	if os.Getenv("WGOTH_HOST") == "" {
-		hst, _ := os.Hostname()
-		os.Setenv("WGOTH_HOST", hst)
 	}
 
-	if os.Getenv("WGOTH_PORT") == "" {
+	if len(port) == 0 {
 
-		os.Setenv("WGOTH_PORT", "8000")
+		port = 8080
 	}
 
 	var provider goth.Provider
 
 	switch provider_name {
-	case "auth0":
-		provider = auth0.New(os.Getenv("AUTH0_KEY"), os.Getenv("AUTH0_SECRET"),authurl(provider_name), os.Getenv("AUTH0_DOMAIN"))
-	case "google":
-		provider = google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), authurl(provider_name))
-	case "digitalocean":
-		provider = digitalocean.New(os.Getenv("DIGITALOCEAN_KEY"), os.Getenv("DIGITALOCEAN_SECRET"), authurl(provider_name), "read")
-	case "okta":
-		provider = okta.New(os.Getenv("OKTA_ID"), os.Getenv("OKTA_SECRET"), os.Getenv("OKTA_ORG_URL"), authurl(provider_name), "openid", "profile", "email")
-	case "github":
-		provider = github.New(os.Getenv("GITHUB_KEY"), os.Getenv("GITHUB_SECRET"), authurl(provider_name))
+	case "auth0": //key, secret,domain
+		provider = auth0.New(getvar(0, args), getvar(1, args), authurl(provider_name), getvar(2, args))
+	case "google": //key,secret
+		provider = google.New(getvar(0, args), getvar(1, args), authurl(provider_name))
+	case "digitalocean": //key,secret
+		provider = digitalocean.New(getvar(0, args), getvar(1, args), authurl(provider_name), "read")
+	case "okta": //id,secret,org_url
+		provider = okta.New(getvar(0, args), getvar(1, args), getvar(2, args), authurl(provider_name), "openid", "profile", "email")
+	case "github": //key,secret
+		provider = github.New(getvar(0, args), getvar(1, args), authurl(provider_name))
 	default:
-		provider = google.New(os.Getenv("GOOGLE_KEY"), os.Getenv("GOOGLE_SECRET"), authurl(provider_name))
+		provider = google.New(getvar(0, args), getvar(1, args), authurl(provider_name))
 
 	}
 
@@ -69,7 +72,17 @@ func Init(provider_nm string,  sslkey_str string, sslcrt_str string) {
 
 func authurl(name string) string {
 
-	return fmt.Sprintf("%s://%s:%s/auth/%s/callback", protocol, os.Getenv("WGOTH_HOST"), os.Getenv("WGOTH_PORT"), name)
+	return fmt.Sprintf("%s://%s:%s/auth/%s/callback", protocol, host, port, name)
+
+}
+
+func getvar(key int, val []string) string {
+
+	if key >= len(val) {
+		return ""
+	}
+
+	return val[key]
 
 }
 
@@ -82,8 +95,6 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 	if err == nil {
 		loginTemplate = string(f) // we found a file with path loginTemplate so we set this to the new string, otherwise it's just a string template
 	}
-
-
 
 	p := pat.New()
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
@@ -123,18 +134,18 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 	p.Get("/", func(res http.ResponseWriter, req *http.Request) {
 
 		t, _ := template.New("tmpl").Parse(loginTemplate)
-		t.Execute(res, map[string]string{"Provider":provider_name})
+		t.Execute(res, map[string]string{"Provider": provider_name})
 	})
 
-	log.Println("Listening On:",os.Getenv("WGOTH_PORT"))
+	log.Println("Listening On:", port)
 
 	if len(sslkey) > 0 && len(sslcrt) > 0 {
 		log.Println("OAuth https on")
-		log.Fatal(http.ListenAndServeTLS(":"+os.Getenv("WGOTH_PORT"), sslcrt, sslkey, p))
+		log.Fatal(http.ListenAndServeTLS(host+":"+port, sslcrt, sslkey, p))
 
 	} else {
 		log.Println("OAuth https off")
-		log.Fatal(http.ListenAndServe(":"+os.Getenv("WGOTH_PORT"), p))
+		log.Fatal(http.ListenAndServe(host+":"+port, p))
 	}
 
 }

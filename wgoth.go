@@ -22,10 +22,10 @@ var protocol string
 var sslcrt string
 var sslkey string
 
-func Init(provider_nm string,  sslkey_str string, sslcrt_str string) {
+func Init(provider_nm string,  sslcrt_str string, sslkey_str string) {
 
 	provider_name = provider_nm
-	sslkey =  sslkey_str
+	sslkey = sslkey_str
 	sslcrt = sslcrt_str
 
 	if len(sslkey) > 0 && len(sslcrt) > 0 {

@@ -27,7 +27,16 @@ var userTemplate = `
 func main() {
 
 	os.Setenv("SESSION_SECRET", "asdfasfasdf")                                                                            //Required
-	ga.Init("google", "127.0.0.1", "8087", "", "", "madeupstringhere.apps.googleusercontent.com", "abc123_google_secret") //after the first 5 required args, the variable args are used
+	ga.Init(
+	      "google",
+	      "", //empty for autodetect
+	      viper.GetString("port"),
+	      viper.GetString("ssl_key_path"),
+	      viper.GetString("ssl_cert_path"),
+	      viper.GetString("google_client"),
+	      viper.GetString("google_secret"),
+	      )
+    
 	ga.AuthListen(loginTemplate, func(user goth.User, res http.ResponseWriter, req *http.Request) {
 
 		log.Printf("%+v", user)

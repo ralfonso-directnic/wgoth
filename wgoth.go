@@ -45,7 +45,7 @@ func Init(provider_nm string, host_str string, port_str string, sslkey_str strin
 
 	if len(port) == 0 {
 
-		port = 8080
+		port = "8080"
 	}
 
 	var provider goth.Provider

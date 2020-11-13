@@ -22,9 +22,11 @@ var protocol string
 var sslcrt string
 var sslkey string
 
-func Init(provider_nm string,  sslkey string, sslcrt string) {
+func Init(provider_nm string,  sslkey_str string, sslcrt_str string) {
 
 	provider_name = provider_nm
+	sslkey =  sslkey_str
+	sslcrt = sslcrt_str
 
 	if len(sslkey) > 0 && len(sslcrt) > 0 {
 		protocol = "https"

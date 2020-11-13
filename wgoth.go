@@ -126,6 +126,7 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 			fn(gothUser, res, req)
 
 		} else {
+			log.Println(err)
 			gothic.BeginAuthHandler(res, req)
 		}
 	})

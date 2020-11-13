@@ -39,8 +39,7 @@ func Init(provider_nm string, host_str string, port_str string, sslkey_str strin
 	}
 
 	if len(host) == 0 {
-		host, _ := os.Hostname()
-
+		host, _ = os.Hostname()
 	}
 
 	if len(port) == 0 {

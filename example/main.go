@@ -26,7 +26,7 @@ var userTemplate = `
 
 func main() {
 
-	os.Setenv("SESSION_SECRET", "asdfasfasdf")                                                                            //Required
+	ga.Session("asdfasfasdf")                                                                            //Required
 	ga.Init(
 	      "google",
 	      "", //empty for autodetect

@@ -21,7 +21,6 @@ import (
 	"net/url"
 	"os"
 	"strings"
-        "log"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"

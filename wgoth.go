@@ -108,7 +108,7 @@ func getvar(key int, val []string) string {
 
 }
 
-func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseWriter, req *http.Request),logout func(res http.ResponseWriter, req *http.Request) ) {
+func AuthListen(loginTemplate string, router func(rtr *mux.Router), fn func(user goth.User, res http.ResponseWriter, req *http.Request),logout func(res http.ResponseWriter, req *http.Request) ) {
 
 	//could be a path or could be a string
 
@@ -119,6 +119,7 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 	}
 
 	p := pat.New()
+	
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
 
 		user, err := gothic.CompleteUserAuth(res, req)
@@ -172,6 +173,8 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 		t, _ := template.New("tmpl").Parse(loginTemplate)
 		t.Execute(res, map[string]string{"Provider": provider_name})
 	})
+	
+	router(p)
 
 	log.Println("Listening On:", port)
 

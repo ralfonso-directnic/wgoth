@@ -162,32 +162,32 @@ var CompleteUserAuth = func(res http.ResponseWriter, req *http.Request) (goth.Us
 
 	providerName, err := GetProviderName(req)
 	if err != nil {
-    log.Println(err)
+  
 		return goth.User{}, err
 	}
   
 
 	provider, err := goth.GetProvider(providerName)
 	if err != nil {
-    log.Println(err)
+   
 		return goth.User{}, err
 	}
 
 	value, err := GetFromSession(providerName, req)
 	if err != nil {
-    log.Println(err)
+  
 		return goth.User{}, err
 	}
 
 	sess, err := provider.UnmarshalSession(value)
 	if err != nil {
-    log.Println(err)
+
 		return goth.User{}, err
 	}
 
 	err = validateState(req, sess)
 	if err != nil {
-    log.Println(err)
+
 		return goth.User{}, err
 	}
 
@@ -325,8 +325,7 @@ func StoreInSession(key string, value string, req *http.Request, res http.Respon
 // If no value has previously been stored at the specified key, it will return an error.
 func GetFromSession(key string, req *http.Request) (string, error) {
 	
-	log.Printf("%s -- %#v",key,req)
-	
+
 	session, _ := Store.Get(req, SessionName)
 	value, err := getSessionValue(session, key)
 	if err != nil {

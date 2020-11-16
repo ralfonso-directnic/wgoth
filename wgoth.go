@@ -3,8 +3,9 @@ package wgoth
 import (
 	"fmt"
 	"github.com/gorilla/pat"
-	
-	"github.com/quasoft/memstore"
+	//"github.com/quasoft/memstore"
+	 gsm "github.com/bradleypeabody/gorilla-sessions-memcache"
+	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/markbates/goth"
 	"github.com/ralfonso-directnic/wgoth/gothic"
 	"github.com/markbates/goth/providers/auth0"
@@ -28,11 +29,13 @@ var port string
 
 func Session(authkey string,enckey string){
 	
-   	
+       memcacheClient := gsm.NewGoMemcacher(memcache.New("localhost:11211"))
+       store := gsm.NewMemcacherStore(memcacheClient, "auth_session_", []byte(authkey))
+	/*
        store := memstore.NewMemStore(
 		[]byte(authkey),
 		[]byte(enckey),
-	)
+	)*/
 
         gothic.Store = store	
 	

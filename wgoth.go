@@ -140,7 +140,7 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 	p.Get("/logout/{provider}", func(res http.ResponseWriter, req *http.Request) {
 		gothic.Logout(res, req)
 		
-		logout(req,req)
+		logout(res,req)
 		
 		res.Header().Set("Location", "/")
 		res.WriteHeader(http.StatusTemporaryRedirect)

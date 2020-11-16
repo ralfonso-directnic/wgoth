@@ -5,7 +5,6 @@ import (
 	"github.com/gorilla/pat"
 	"github.com/quasoft/memstore"
 	"github.com/gorilla/sessions"
-	"github.com/gorilla/mux"
 	"github.com/markbates/goth"
 	"github.com/ralfonso-directnic/wgoth/gothic"
 	"github.com/markbates/goth/providers/auth0"

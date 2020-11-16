@@ -142,6 +142,14 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 		res.Header().Set("Location", "/")
 		res.WriteHeader(http.StatusTemporaryRedirect)
 	})
+	
+	p.Get("/status/{provider}", func(res http.ResponseWriter, req *http.Request) {
+
+	
+		fn(gothUser, res, req)
+
+	
+	})
 
 	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
 

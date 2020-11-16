@@ -145,7 +145,8 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 	
 	p.Get("/status/{provider}", func(res http.ResponseWriter, req *http.Request) {
 
-	
+	        gothUser := gothic.CompleteUserAuth(res, req)
+		
 		fn(gothUser, res, req)
 
 	

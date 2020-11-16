@@ -32,7 +32,7 @@ var Store sessions.Store
 func Session(authkey string,enckey string){
 	
        memcacheClient := gsm.NewGoMemcacher(memcache.New("localhost:11211"))
-       Store = &gsm.NewMemcacherStore(memcacheClient, "auth_session_", []byte(authkey))
+       Store = gsm.NewMemcacherStore(memcacheClient, "auth_session_", []byte(authkey))
 	/*
        store := memstore.NewMemStore(
 		[]byte(authkey),

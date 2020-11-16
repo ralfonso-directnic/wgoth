@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 	 gsm "github.com/bradleypeabody/gorilla-sessions-memcache"
 	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/gorilla/mux"
 	"github.com/markbates/goth"
 	"github.com/ralfonso-directnic/wgoth/gothic"
 	"github.com/markbates/goth/providers/auth0"

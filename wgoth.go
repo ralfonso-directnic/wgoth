@@ -105,7 +105,7 @@ func getvar(key int, val []string) string {
 
 }
 
-func AuthListen(loginTemplate string, router func(rtr *mux.Router), fn func(user goth.User, res http.ResponseWriter, req *http.Request),logout func(res http.ResponseWriter, req *http.Request) ) {
+func AuthListen(loginTemplate string, router func(rtr *pat.Router), fn func(user goth.User, res http.ResponseWriter, req *http.Request),logout func(res http.ResponseWriter, req *http.Request) ) {
 
 	//could be a path or could be a string
 

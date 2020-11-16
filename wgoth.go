@@ -116,6 +116,8 @@ func AuthListen(loginTemplate string, router func(rtr *pat.Router), fn func(user
 
 	p := pat.New()
 	
+	router(p)
+	
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
 
 		user, err := gothic.CompleteUserAuth(res, req)
@@ -170,7 +172,7 @@ func AuthListen(loginTemplate string, router func(rtr *pat.Router), fn func(user
 		t.Execute(res, map[string]string{"Provider": provider_name})
 	})
 	
-	router(p)
+	
 
 	log.Println("Listening On:", port)
 

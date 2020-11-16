@@ -21,7 +21,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
-  "log"
+        "log"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
@@ -325,7 +325,7 @@ func StoreInSession(key string, value string, req *http.Request, res http.Respon
 // If no value has previously been stored at the specified key, it will return an error.
 func GetFromSession(key string, req *http.Request) (string, error) {
 	
-	log.Printf("%#v",key,req)
+	log.Printf("%s -- %#v",key,req)
 	
 	session, _ := Store.Get(req, SessionName)
 	value, err := getSessionValue(session, key)

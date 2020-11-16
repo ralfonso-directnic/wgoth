@@ -27,7 +27,7 @@ var sslcrt string
 var sslkey string
 var host string
 var port string
-var Store *sessions.Store
+var Store sessions.Store
 
 func Session(authkey string,enckey string){
 	

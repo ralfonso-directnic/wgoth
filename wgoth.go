@@ -6,7 +6,7 @@ import (
 	
 	"github.com/quasoft/memstore"
 	"github.com/markbates/goth"
-	"github.com/markbates/goth/gothic"
+	"github.com/ralfonso-directnic/wgoth/gothic"
 	"github.com/markbates/goth/providers/auth0"
 	"github.com/markbates/goth/providers/digitalocean"
 	"github.com/markbates/goth/providers/github"

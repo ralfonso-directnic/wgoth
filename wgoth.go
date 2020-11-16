@@ -108,7 +108,7 @@ func getvar(key int, val []string) string {
 
 }
 
-func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseWriter, req *http.Request)) {
+func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseWriter, req *http.Request),logout func(res http.ResponseWriter, req *http.Request) ) {
 
 	//could be a path or could be a string
 
@@ -139,6 +139,9 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 
 	p.Get("/logout/{provider}", func(res http.ResponseWriter, req *http.Request) {
 		gothic.Logout(res, req)
+		
+		logout(req,req)
+		
 		res.Header().Set("Location", "/")
 		res.WriteHeader(http.StatusTemporaryRedirect)
 	})

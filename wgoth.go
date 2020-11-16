@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/pat"
 	//"github.com/quasoft/memstore"
+	"github.com/gorilla/sessions"
 	 gsm "github.com/bradleypeabody/gorilla-sessions-memcache"
 	"github.com/bradfitz/gomemcache/memcache"
 	"github.com/markbates/goth"
@@ -26,18 +27,19 @@ var sslcrt string
 var sslkey string
 var host string
 var port string
+var Store *sessions.Store
 
 func Session(authkey string,enckey string){
 	
        memcacheClient := gsm.NewGoMemcacher(memcache.New("localhost:11211"))
-       store := gsm.NewMemcacherStore(memcacheClient, "auth_session_", []byte(authkey))
+       Store = gsm.NewMemcacherStore(memcacheClient, "auth_session_", []byte(authkey))
 	/*
        store := memstore.NewMemStore(
 		[]byte(authkey),
 		[]byte(enckey),
 	)*/
 
-        gothic.Store = store	
+        gothic.Store = Store	
 	
 
 }
@@ -120,6 +122,7 @@ func AuthListen(loginTemplate string, fn func(user goth.User, res http.ResponseW
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
 
 		user, err := gothic.CompleteUserAuth(res, req)
+		
 		if err != nil {
 			fmt.Fprintln(res, err)
 			return

@@ -170,7 +170,7 @@ func AuthListen(loginTemplate string, router func(rtr *pat.Router), fn func(user
 		t.Execute(res, map[string]string{"Provider": provider_name})
 	})
 	
-	router(p)
+	router(&p)
 
 	log.Println("Listening On:", port)
 
